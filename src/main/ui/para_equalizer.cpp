@@ -822,8 +822,7 @@ namespace lsp
                     {
                         f.wDot->slots()->bind(tk::SLOT_MOUSE_CLICK, slot_filter_dot_click, this);
                         f.wDot->hvalue()->set_transform(quantize_frequency, this);
-                        if (metadata() == &meta::para_equalizer_x8_stereo)
-                            f.wDot->set_ctrl_axis_lock(true);
+                        f.wDot->set_ctrl_axis_lock(true);
                     }
                     if (f.wInspect != NULL)
                         f.wInspect->slots()->bind(tk::SLOT_SUBMIT, slot_filter_inspect_submit, this);
