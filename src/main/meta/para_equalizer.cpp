@@ -301,7 +301,8 @@ namespace lsp
             MESH("rfg" id, "Return FFT graph" label, 2, para_equalizer_metadata::MESH_POINTS)
 
         #define EQ_CONSTANT_VOLUME \
-            CONTROL_ALL("cv_ref", "Constant Volume reference", "Const Vol", U_DB, -2000.0f, 2000.0f, -2000.0f, 0.01f)
+            CONTROL_ALL("cv_ref", "Constant Volume reference", "Const Vol", U_DB, -2000.0f, 2000.0f, -2000.0f, 0.01f), \
+            UNLIMITED_METER("cv_db", "Constant Volume compensation", U_DB, 0.0f)
 
         static const port_t para_equalizer_x8_mono_ports[] =
         {

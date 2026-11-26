@@ -142,6 +142,7 @@ namespace lsp
                 float               fCompensation = 1.0f;
                 float               fCompensationTarget = 1.0f;
                 plug::IPort        *pConstantVolume = NULL;
+                plug::IPort        *pCompensationReadout = NULL;
                 dspu::Analyzer      sAnalyzer;              // Analyzer
                 uint32_t            nFilters;               // Number of filters
                 uint32_t            nMode;                  // Operating mode

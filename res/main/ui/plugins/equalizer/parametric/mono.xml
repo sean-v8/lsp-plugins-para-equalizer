@@ -196,7 +196,10 @@
 					<vbox vfill="false">
 						<label text="labels.output" expand="true" halign="0"/>
 						<value id="g_out" width.min="50" sline="true" halign="0"/>
-						<button ui:id="constant_volume" mode="toggle" halign="0"/>
+						<hbox spacing="4">
+							<button ui:id="constant_volume" mode="toggle" halign="0"/>
+							<value id="cv_db" width.min="54" sline="true" halign="0"/>
+						</hbox>
 					</vbox>
 
 					<knob id="frqs" scolor="mid" pad.r="4"/>

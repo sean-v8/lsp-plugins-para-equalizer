@@ -425,6 +425,7 @@ namespace lsp
                 }
             }
             BIND_PORT(pConstantVolume);
+            BIND_PORT(pCompensationReadout);
         }
 
         void para_equalizer::mark_all_filters_for_update()
@@ -889,7 +890,7 @@ namespace lsp
             // The control stores the reference level so idle and realtime
             // instances, and instances restored by a host, use the same anchor.
             const float anchor = pConstantVolume->value();
-            fCompensationTarget = 1.0f;
+            float correction_db = 0.0f;
             if (bReferenceReady && (anchor > CONSTANT_VOLUME_OFF) &&
                 (eq_mode != dspu::EQM_BYPASS) && (i_value < 0))
             {
@@ -900,8 +901,10 @@ namespace lsp
                     },
                     [this](size_t channel) { return vChannels[channel].pPitch->value(); });
                 if (level > CONSTANT_VOLUME_OFF)
-                    fCompensationTarget = std::pow(10.0f, 0.05f * lsp_limit(anchor - level, -36.0f, 36.0f));
+                    correction_db = lsp_limit(anchor - level, -36.0f, 36.0f);
             }
+            fCompensationTarget = std::pow(10.0f, 0.05f * correction_db);
+            pCompensationReadout->set_value(correction_db);
 
             // Update analyzer
             if (sAnalyzer.needs_reconfiguration())
