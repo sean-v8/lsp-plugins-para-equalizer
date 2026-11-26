@@ -32,6 +32,7 @@
 #include <lsp-plug.in/dsp-units/util/Oversampler.h>
 
 #include <private/meta/para_equalizer.h>
+#include <private/constant_volume.h>
 
 namespace lsp
 {
@@ -135,6 +136,12 @@ namespace lsp
                 } eq_channel_t;
 
             protected:
+                PinkReference       sPinkReference;
+                bool                bReferenceReady = false;
+                bool                bCompensationStarted = false;
+                float               fCompensation = 1.0f;
+                float               fCompensationTarget = 1.0f;
+                plug::IPort        *pConstantVolume = NULL;
                 dspu::Analyzer      sAnalyzer;              // Analyzer
                 uint32_t            nFilters;               // Number of filters
                 uint32_t            nMode;                  // Operating mode
@@ -164,10 +171,7 @@ namespace lsp
 
             protected:
                 static inline dspu::equalizer_mode_t get_eq_mode(ssize_t mode);
-                static inline void  decode_filter(uint32_t *ftype, uint32_t *slope, size_t mode);
-                static inline bool  adjust_gain(size_t filter_type);
                 static bool         filter_inspect_can_be_enabled(eq_channel_t *c, eq_filter_t *f);
-                static bool         filter_has_width(size_t type);
 
             protected:
                 void                do_destroy();

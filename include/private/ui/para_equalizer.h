@@ -52,6 +52,7 @@ namespace lsp
                     ui::IPort          *pMode;
                     ui::IPort          *pSlope;
                     ui::IPort          *pFreq;
+                    ui::IPort          *pWidth;
                     ui::IPort          *pSolo;
                     ui::IPort          *pMute;
                     ui::IPort          *pQuality;
@@ -88,6 +89,9 @@ namespace lsp
                 ssize_t             nSplitChannels;
                 size_t              nFilters;
 
+                ui::IPort          *pConstantVolume = NULL;
+                tk::Button         *wConstantVolume = NULL;
+
                 filter_t           *pCurrDot;           // Current filter associated with dot
                 filter_t           *pCurrNote;          // Current filter note
                 tk::Menu           *wFilterMenu;        // Popup menu for filter properties
@@ -102,6 +106,7 @@ namespace lsp
                 lltl::parray<tk::Widget> vFilterGrids;   // List of filter grids
 
             protected:
+                static status_t slot_constant_volume(tk::Widget *sender, void *ptr, void *data);
                 static status_t slot_start_import_rew_file(tk::Widget *sender, void *ptr, void *data);
                 static status_t slot_call_import_rew_file(tk::Widget *sender, void *ptr, void *data);
                 static status_t slot_fetch_rew_path(tk::Widget *sender, void *ptr, void *data);

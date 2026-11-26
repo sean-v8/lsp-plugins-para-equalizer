@@ -30,6 +30,8 @@
 #include <private/meta/para_equalizer.h>
 #include <private/ui/para_equalizer.h>
 
+#include <private/constant_volume.h>
+
 namespace lsp
 {
     namespace plugins
@@ -813,6 +815,7 @@ namespace lsp
                     f.pMode         = find_port(*fmt, "fm", port_id);
                     f.pSlope        = find_port(*fmt, "s", port_id);
                     f.pFreq         = find_port(*fmt, "f", port_id);
+                    f.pWidth        = find_port(*fmt, "w", port_id);
                     f.pSolo         = find_port(*fmt, "xs", port_id);
                     f.pMute         = find_port(*fmt, "xm", port_id);
                     f.pGain         = find_port(*fmt, "g", port_id);
@@ -1051,6 +1054,16 @@ namespace lsp
                 child->text()->set("actions.import_rew_filter_file");
                 child->slots()->bind(tk::SLOT_SUBMIT, slot_start_import_rew_file, this);
                 menu->add(child);
+            }
+
+            pConstantVolume = pWrapper->port("cv_ref");
+            wConstantVolume = wnd->widgets()->get<tk::Button>("constant_volume");
+            if ((pConstantVolume != NULL) && (wConstantVolume != NULL))
+            {
+                pConstantVolume->bind(this);
+                wConstantVolume->text()->set_raw("Constant Volume");
+                wConstantVolume->slots()->bind(tk::SLOT_SUBMIT, slot_constant_volume, this);
+                wConstantVolume->down()->set(pConstantVolume->value() > CONSTANT_VOLUME_OFF);
             }
 
             // Bind double-click handler
@@ -1731,8 +1744,44 @@ namespace lsp
             return STATUS_OK;
         }
 
+        status_t para_equalizer_ui::slot_constant_volume(tk::Widget *sender, void *ptr, void *data)
+        {
+            auto *self = static_cast<para_equalizer_ui *>(ptr);
+            ui::IPort *port = self->pConstantVolume;
+            float anchor = CONSTANT_VOLUME_OFF;
+            if (port->value() <= CONSTANT_VOLUME_OFF)
+            {
+                PinkReference reference;
+                if ((self->vFilters.size() != self->nSplitChannels * self->nFilters) || !reference.init())
+                    return STATUS_BAD_STATE;
+
+                const bool mid_side = self->fmtStrings == fmt_strings_ms;
+                const char *pitch[2] = { "frqs", "frqs" };
+                if (self->nSplitChannels == 2)
+                {
+                    pitch[0] = mid_side ? "frqs_m" : "frqs_l";
+                    pitch[1] = mid_side ? "frqs_s" : "frqs_r";
+                }
+                anchor = reference.level(self->nSplitChannels, self->nFilters,
+                    [self](size_t channel, size_t band) -> const filter_t & {
+                        return *self->vFilters.uget(channel * self->nFilters + band);
+                    },
+                    [self, &pitch](size_t channel) {
+                        return self->pWrapper->port(pitch[channel])->value();
+                    });
+            }
+            port->begin_edit();
+            port->set_value(anchor);
+            port->notify_all(ui::PORT_USER_EDIT);
+            port->end_edit();
+            return STATUS_OK;
+        }
+
         void para_equalizer_ui::notify(ui::IPort *port, size_t flags)
         {
+            if ((port == pConstantVolume) && (wConstantVolume != NULL))
+                wConstantVolume->down()->set(port->value() > CONSTANT_VOLUME_OFF);
+
             if (is_filter_inspect_port(port))
             {
                 if ((port == pAutoInspect) && (pAutoInspect->value() >= 0.5f))

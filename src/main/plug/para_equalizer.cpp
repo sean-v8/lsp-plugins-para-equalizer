@@ -130,305 +130,6 @@ namespace lsp
             do_destroy();
         }
 
-        inline void para_equalizer::decode_filter(uint32_t *ftype, uint32_t *slope, size_t mode)
-        {
-            #define EQF(x) meta::para_equalizer_metadata::EQF_ ## x
-            #define EQS(k, t, ks) case meta::para_equalizer_metadata::EFM_ ## k:    \
-                    *ftype = dspu::t; \
-                    *slope = ks * *slope; \
-                    return;
-            #define EQDFL  default: \
-                    *ftype = dspu::FLT_NONE; \
-                    *slope = 1; \
-                    return;
-
-            switch (*ftype)
-            {
-                case EQF(BELL):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_BELL, 1)
-                        EQS(RLC_MT, FLT_MT_RLC_BELL, 1)
-                        EQS(BWC_BT, FLT_BT_BWC_BELL, 1)
-                        EQS(BWC_MT, FLT_MT_BWC_BELL, 1)
-                        EQS(LRX_BT, FLT_BT_LRX_BELL, 1)
-                        EQS(LRX_MT, FLT_MT_LRX_BELL, 1)
-                        EQS(APO_DR, FLT_DR_APO_PEAKING, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-                case EQF(HIPASS):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_HIPASS, 2)
-                        EQS(RLC_MT, FLT_MT_RLC_HIPASS, 2)
-                        EQS(BWC_BT, FLT_BT_BWC_HIPASS, 2)
-                        EQS(BWC_MT, FLT_MT_BWC_HIPASS, 2)
-                        EQS(LRX_BT, FLT_BT_LRX_HIPASS, 1)
-                        EQS(LRX_MT, FLT_MT_LRX_HIPASS, 1)
-                        EQS(APO_DR, FLT_DR_APO_HIPASS, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-                case EQF(HISHELF):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_HISHELF, 1)
-                        EQS(RLC_MT, FLT_MT_RLC_HISHELF, 1)
-                        EQS(BWC_BT, FLT_BT_BWC_HISHELF, 1)
-                        EQS(BWC_MT, FLT_MT_BWC_HISHELF, 1)
-                        EQS(LRX_BT, FLT_BT_LRX_HISHELF, 1)
-                        EQS(LRX_MT, FLT_MT_LRX_HISHELF, 1)
-                        EQS(APO_DR, FLT_DR_APO_HISHELF, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-                case EQF(LOPASS):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_LOPASS, 2)
-                        EQS(RLC_MT, FLT_MT_RLC_LOPASS, 2)
-                        EQS(BWC_BT, FLT_BT_BWC_LOPASS, 2)
-                        EQS(BWC_MT, FLT_MT_BWC_LOPASS, 2)
-                        EQS(LRX_BT, FLT_BT_LRX_LOPASS, 1)
-                        EQS(LRX_MT, FLT_MT_LRX_LOPASS, 1)
-                        EQS(APO_DR, FLT_DR_APO_LOPASS, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-                case EQF(LOSHELF):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_LOSHELF, 1)
-                        EQS(RLC_MT, FLT_MT_RLC_LOSHELF, 1)
-                        EQS(BWC_BT, FLT_BT_BWC_LOSHELF, 1)
-                        EQS(BWC_MT, FLT_MT_BWC_LOSHELF, 1)
-                        EQS(LRX_BT, FLT_BT_LRX_LOSHELF, 1)
-                        EQS(LRX_MT, FLT_MT_LRX_LOSHELF, 1)
-                        EQS(APO_DR, FLT_DR_APO_LOSHELF, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-                case EQF(NOTCH):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_NOTCH, 1)
-                        EQS(RLC_MT, FLT_MT_RLC_NOTCH, 1)
-                        EQS(BWC_BT, FLT_BT_RLC_NOTCH, 1)
-                        EQS(BWC_MT, FLT_MT_RLC_NOTCH, 1)
-                        EQS(LRX_BT, FLT_BT_RLC_NOTCH, 1)
-                        EQS(LRX_MT, FLT_MT_RLC_NOTCH, 1)
-                        EQS(APO_DR, FLT_DR_APO_NOTCH, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-                case EQF(ALLPASS):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_ALLPASS, 2)
-                        EQS(RLC_MT, FLT_BT_RLC_ALLPASS, 2)
-                        EQS(BWC_BT, FLT_BT_BWC_ALLPASS, 2)
-                        EQS(BWC_MT, FLT_BT_BWC_ALLPASS, 2)
-                        EQS(LRX_BT, FLT_BT_LRX_ALLPASS, 1)
-                        EQS(LRX_MT, FLT_BT_LRX_ALLPASS, 1)
-                        EQS(APO_DR, FLT_DR_APO_ALLPASS, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-                case EQF(RESONANCE):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_RESONANCE, 1)
-                        EQS(RLC_MT, FLT_MT_RLC_RESONANCE, 1)
-                        EQS(BWC_BT, FLT_BT_RLC_RESONANCE, 1)
-                        EQS(BWC_MT, FLT_MT_RLC_RESONANCE, 1)
-                        EQS(LRX_BT, FLT_BT_RLC_RESONANCE, 1)
-                        EQS(LRX_MT, FLT_MT_RLC_RESONANCE, 1)
-                        EQS(APO_DR, FLT_DR_APO_PEAKING, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-                case EQF(BANDPASS):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_BANDPASS, 1)
-                        EQS(RLC_MT, FLT_MT_RLC_BANDPASS, 1)
-                        EQS(BWC_BT, FLT_BT_BWC_BANDPASS, 1)
-                        EQS(BWC_MT, FLT_MT_BWC_BANDPASS, 1)
-                        EQS(LRX_BT, FLT_BT_LRX_BANDPASS, 1)
-                        EQS(LRX_MT, FLT_MT_LRX_BANDPASS, 1)
-                        EQS(APO_DR, FLT_DR_APO_BANDPASS, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-                case EQF(LADDERPASS):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_LADDERPASS, 1)
-                        EQS(RLC_MT, FLT_MT_RLC_LADDERPASS, 1)
-                        EQS(BWC_BT, FLT_BT_BWC_LADDERPASS, 1)
-                        EQS(BWC_MT, FLT_MT_BWC_LADDERPASS, 1)
-                        EQS(LRX_BT, FLT_BT_LRX_LADDERPASS, 1)
-                        EQS(LRX_MT, FLT_MT_LRX_LADDERPASS, 1)
-                        EQS(APO_DR, FLT_DR_APO_LADDERPASS, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-                case EQF(LADDERREJ):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_LADDERREJ, 1)
-                        EQS(RLC_MT, FLT_MT_RLC_LADDERREJ, 1)
-                        EQS(BWC_BT, FLT_BT_BWC_LADDERREJ, 1)
-                        EQS(BWC_MT, FLT_MT_BWC_LADDERREJ, 1)
-                        EQS(LRX_BT, FLT_BT_LRX_LADDERREJ, 1)
-                        EQS(LRX_MT, FLT_MT_LRX_LADDERREJ, 1)
-                        EQS(APO_DR, FLT_DR_APO_LADDERREJ, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-            #ifdef LSP_USE_EXPERIMENTAL
-                case EQF(ALLPASS2):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_ALLPASS2, 1)
-                        EQS(RLC_MT, FLT_BT_RLC_ALLPASS2, 1)
-                        EQS(BWC_BT, FLT_BT_RLC_ALLPASS2, 1)
-                        EQS(BWC_MT, FLT_BT_RLC_ALLPASS2, 1)
-                        EQS(LRX_BT, FLT_BT_RLC_ALLPASS2, 1)
-                        EQS(LRX_MT, FLT_BT_RLC_ALLPASS2, 1)
-                        EQS(APO_DR, FLT_DR_APO_ALLPASS2, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-                case EQF(ENVELOPE):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_BT_RLC_ENVELOPE, 1)
-                        EQS(RLC_MT, FLT_MT_RLC_ENVELOPE, 1)
-                        EQS(BWC_BT, FLT_BT_RLC_ENVELOPE, 1)
-                        EQS(BWC_MT, FLT_MT_RLC_ENVELOPE, 1)
-                        EQS(LRX_BT, FLT_BT_RLC_ENVELOPE, 1)
-                        EQS(LRX_MT, FLT_MT_RLC_ENVELOPE, 1)
-                        EQS(APO_DR, FLT_MT_RLC_ENVELOPE, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-
-                case EQF(LUFS):
-                {
-                    switch (mode)
-                    {
-                        EQS(RLC_BT, FLT_A_WEIGHTED, 1)
-                        EQS(RLC_MT, FLT_B_WEIGHTED, 1)
-                        EQS(BWC_BT, FLT_C_WEIGHTED, 1)
-                        EQS(BWC_MT, FLT_D_WEIGHTED, 1)
-                        EQS(LRX_BT, FLT_K_WEIGHTED, 1)
-                        EQS(LRX_MT, FLT_K_WEIGHTED, 1)
-                        EQS(APO_DR, FLT_K_WEIGHTED, 1)
-                        EQDFL
-                    }
-                    break;
-                }
-            #endif /* LSP_USE_EXPERIMENTAL */
-
-                case EQF(OFF):
-                    EQDFL;
-            }
-            #undef EQDFL
-            #undef EQS
-            #undef EQF
-        }
-
-        inline bool para_equalizer::adjust_gain(size_t filter_type)
-        {
-            switch (filter_type)
-            {
-                case dspu::FLT_NONE:
-
-                case dspu::FLT_BT_RLC_LOPASS:
-                case dspu::FLT_MT_RLC_LOPASS:
-                case dspu::FLT_BT_RLC_HIPASS:
-                case dspu::FLT_MT_RLC_HIPASS:
-                case dspu::FLT_BT_RLC_NOTCH:
-                case dspu::FLT_MT_RLC_NOTCH:
-                case dspu::FLT_BT_RLC_ALLPASS:
-                case dspu::FLT_MT_RLC_ALLPASS:
-                case dspu::FLT_BT_RLC_ALLPASS2:
-                case dspu::FLT_MT_RLC_ALLPASS2:
-                case dspu::FLT_BT_RLC_BANDPASS:
-                case dspu::FLT_MT_RLC_BANDPASS:
-
-                case dspu::FLT_BT_BWC_LOPASS:
-                case dspu::FLT_MT_BWC_LOPASS:
-                case dspu::FLT_BT_BWC_HIPASS:
-                case dspu::FLT_MT_BWC_HIPASS:
-                case dspu::FLT_BT_BWC_ALLPASS:
-                case dspu::FLT_MT_BWC_ALLPASS:
-                case dspu::FLT_BT_BWC_BANDPASS:
-                case dspu::FLT_MT_BWC_BANDPASS:
-
-                case dspu::FLT_BT_LRX_LOPASS:
-                case dspu::FLT_MT_LRX_LOPASS:
-                case dspu::FLT_BT_LRX_HIPASS:
-                case dspu::FLT_MT_LRX_HIPASS:
-                case dspu::FLT_BT_LRX_ALLPASS:
-                case dspu::FLT_MT_LRX_ALLPASS:
-                case dspu::FLT_BT_LRX_BANDPASS:
-                case dspu::FLT_MT_LRX_BANDPASS:
-
-                // Disable gain adjust for several APO filters, too
-                case dspu::FLT_DR_APO_NOTCH:
-                case dspu::FLT_DR_APO_LOPASS:
-                case dspu::FLT_DR_APO_HIPASS:
-                case dspu::FLT_DR_APO_ALLPASS:
-                case dspu::FLT_DR_APO_ALLPASS2:
-                case dspu::FLT_DR_APO_BANDPASS:
-                    return false;
-                default:
-                    break;
-            }
-            return true;
-        }
-
         inline dspu::equalizer_mode_t para_equalizer::get_eq_mode(ssize_t mode)
         {
             switch (mode)
@@ -459,6 +160,8 @@ namespace lsp
             vChannels           = new eq_channel_t[channels];
             if (vChannels == NULL)
                 return;
+
+            bReferenceReady     = sPinkReference.init();
 
             // Initialize global parameters
             fGainIn             = 1.0f;
@@ -721,6 +424,7 @@ namespace lsp
                     }
                 }
             }
+            BIND_PORT(pConstantVolume);
         }
 
         void para_equalizer::mark_all_filters_for_update()
@@ -808,36 +512,6 @@ namespace lsp
 
             // The filter should be enabled
             return size_t(f->pType->value()) != meta::para_equalizer_metadata::EQF_OFF;
-        }
-
-        bool para_equalizer::filter_has_width(size_t type)
-        {
-            switch (type)
-            {
-                case dspu::FLT_BT_RLC_BANDPASS:
-                case dspu::FLT_MT_RLC_BANDPASS:
-                case dspu::FLT_BT_BWC_BANDPASS:
-                case dspu::FLT_MT_BWC_BANDPASS:
-                case dspu::FLT_BT_LRX_BANDPASS:
-                case dspu::FLT_MT_LRX_BANDPASS:
-                case dspu::FLT_BT_RLC_LADDERPASS:
-                case dspu::FLT_MT_RLC_LADDERPASS:
-                case dspu::FLT_BT_RLC_LADDERREJ:
-                case dspu::FLT_MT_RLC_LADDERREJ:
-                case dspu::FLT_BT_BWC_LADDERPASS:
-                case dspu::FLT_MT_BWC_LADDERPASS:
-                case dspu::FLT_BT_BWC_LADDERREJ:
-                case dspu::FLT_MT_BWC_LADDERREJ:
-                case dspu::FLT_BT_LRX_LADDERPASS:
-                case dspu::FLT_MT_LRX_LADDERPASS:
-                case dspu::FLT_BT_LRX_LADDERREJ:
-                case dspu::FLT_MT_LRX_LADDERREJ:
-                case dspu::FLT_DR_APO_LADDERPASS:
-                case dspu::FLT_DR_APO_LADDERREJ:
-                    return true;
-            }
-
-            return false;
         }
 
         uint32_t para_equalizer::calc_decramping()
@@ -1212,6 +886,23 @@ namespace lsp
             if ((mode_changed) || (eq_mode != dspu::EQM_IIR))
                 bSmoothMode             = false;
 
+            // The control stores the reference level so idle and realtime
+            // instances, and instances restored by a host, use the same anchor.
+            const float anchor = pConstantVolume->value();
+            fCompensationTarget = 1.0f;
+            if (bReferenceReady && (anchor > CONSTANT_VOLUME_OFF) &&
+                (eq_mode != dspu::EQM_BYPASS) && (i_value < 0))
+            {
+                const size_t reference_channels = (nMode == EQ_STEREO) ? 1 : channels;
+                const float level = sPinkReference.level(reference_channels, nFilters,
+                    [this](size_t channel, size_t band) -> const eq_filter_t & {
+                        return vChannels[channel].vFilters[band];
+                    },
+                    [this](size_t channel) { return vChannels[channel].pPitch->value(); });
+                if (level > CONSTANT_VOLUME_OFF)
+                    fCompensationTarget = std::pow(10.0f, 0.05f * lsp_limit(anchor - level, -36.0f, 36.0f));
+            }
+
             // Update analyzer
             if (sAnalyzer.needs_reconfiguration())
             {
@@ -1362,6 +1053,13 @@ namespace lsp
         {
             size_t channels     = (nMode == EQ_MONO) ? 1 : 2;
 
+            const float smoothing = 1.0f - std::exp(-1.0f / (0.020f * lsp_max(1.0f, float(sample_rate()))));
+            if (!bCompensationStarted && (samples > 0))
+            {
+                fCompensation = fCompensationTarget;
+                bCompensationStarted = true;
+            }
+
             // Initialize buffer pointers
             for (size_t i=0; i<channels; ++i)
             {
@@ -1469,6 +1167,19 @@ namespace lsp
                 // Process each channel individually
                 for (size_t i=0; i<channels; ++i)
                     process_channel(&vChannels[i], offset, to_process, samples);
+
+                // Use the same gain envelope on both channels.
+                if ((fCompensation != 1.0f) || (fCompensationTarget != 1.0f))
+                {
+                    for (size_t i = 0; i < to_process; ++i)
+                    {
+                        fCompensation += smoothing * (fCompensationTarget - fCompensation);
+                        for (size_t channel = 0; channel < channels; ++channel)
+                            vChannels[channel].vOutBuffer[i] *= fCompensation;
+                    }
+                    if (std::abs(fCompensation - fCompensationTarget) < 0.00001f * fCompensationTarget)
+                        fCompensation = fCompensationTarget;
+                }
 
                 // Call analyzer
                 perform_analysis(to_process);

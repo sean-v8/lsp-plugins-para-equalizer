@@ -300,6 +300,9 @@ namespace lsp
             MESH("ofg" id, "Output FFT graph" label, 2, para_equalizer_metadata::MESH_POINTS), \
             MESH("rfg" id, "Return FFT graph" label, 2, para_equalizer_metadata::MESH_POINTS)
 
+        #define EQ_CONSTANT_VOLUME \
+            CONTROL_ALL("cv_ref", "Constant Volume reference", "Const Vol", U_DB, -2000.0f, 2000.0f, -2000.0f, 0.01f)
+
         static const port_t para_equalizer_x8_mono_ports[] =
         {
             PORTS_MONO_PLUGIN,
@@ -316,6 +319,7 @@ namespace lsp
             EQ_FILTER_MONO(6, 8, 4000.0f),
             EQ_FILTER_MONO(7, 8, 10000.0f),
 
+            EQ_CONSTANT_VOLUME,
             PORTS_END
         };
 
@@ -343,6 +347,7 @@ namespace lsp
             EQ_FILTER_MONO(14, 16, 10000.0f),
             EQ_FILTER_MONO(15, 16, 16000.0f),
 
+            EQ_CONSTANT_VOLUME,
             PORTS_END
         };
 
@@ -386,6 +391,7 @@ namespace lsp
             EQ_FILTER_MONO(30, 32, 16000.0f),
             EQ_FILTER_MONO(31, 32, 20000.0f),
 
+            EQ_CONSTANT_VOLUME,
             PORTS_END
         };
 
@@ -406,6 +412,7 @@ namespace lsp
             EQ_FILTER_MONO(6, 8, 4000.0f),
             EQ_FILTER_MONO(7, 8, 10000.0f),
 
+            EQ_CONSTANT_VOLUME,
             PORTS_END
         };
 
@@ -434,6 +441,7 @@ namespace lsp
             EQ_FILTER_STEREO(14, 16, 10000.0f),
             EQ_FILTER_STEREO(15, 16, 16000.0f),
 
+            EQ_CONSTANT_VOLUME,
             PORTS_END
         };
 
@@ -478,6 +486,7 @@ namespace lsp
             EQ_FILTER_STEREO(30, 32, 16000.0f),
             EQ_FILTER_STEREO(31, 32, 20000.0f),
 
+            EQ_CONSTANT_VOLUME,
             PORTS_END
         };
 
@@ -499,6 +508,7 @@ namespace lsp
             EQ_FILTER_LR(6, 8, 4000.0f),
             EQ_FILTER_LR(7, 8, 10000.0f),
 
+            EQ_CONSTANT_VOLUME,
             PORTS_END
         };
 
@@ -528,6 +538,7 @@ namespace lsp
             EQ_FILTER_LR(14, 16, 10000.0f),
             EQ_FILTER_LR(15, 16, 16000.0f),
 
+            EQ_CONSTANT_VOLUME,
             PORTS_END
         };
 
@@ -573,6 +584,7 @@ namespace lsp
             EQ_FILTER_LR(30, 32, 16000.0f),
             EQ_FILTER_LR(31, 32, 20000.0f),
 
+            EQ_CONSTANT_VOLUME,
             PORTS_END
         };
 
@@ -594,6 +606,7 @@ namespace lsp
             EQ_FILTER_MS(6, 8, 4000.0f),
             EQ_FILTER_MS(7, 8, 10000.0f),
 
+            EQ_CONSTANT_VOLUME,
             PORTS_END
         };
 
@@ -623,6 +636,7 @@ namespace lsp
             EQ_FILTER_MS(14, 16, 10000.0f),
             EQ_FILTER_MS(15, 16, 16000.0f),
 
+            EQ_CONSTANT_VOLUME,
             PORTS_END
         };
 
@@ -668,6 +682,7 @@ namespace lsp
             EQ_FILTER_MS(30, 32, 16000.0f),
             EQ_FILTER_MS(31, 32, 20000.0f),
 
+            EQ_CONSTANT_VOLUME,
             PORTS_END
         };
 
